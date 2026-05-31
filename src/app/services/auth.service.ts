@@ -56,9 +56,11 @@ export class AuthService {
     });
   }
 
-  signup(userData: Partial<User>): Observable<ApiResponse<{ user: User, token: string }>> {
-    return this.http.post<ApiResponse<{ user: User, token: string }>>(`${this.authUrl}/signup`, userData).pipe(
-      tap((res) => {
+ signup(userData: Partial<User>): Observable<ApiResponse<{ user: User, token: string }>> {
+  return this.http.post<ApiResponse<{ user: User, token: string }>>(`${this.authUrl}/signup`, userData, { 
+    withCredentials: true // أضيفي هذا السطر
+  }).pipe(
+    tap((res) => {
         if ('token' in res) {
            this.setSession((res as any).token);
         } else if (res.data && (res.data as any).token) {
@@ -69,7 +71,9 @@ export class AuthService {
   }
 
   login(credentials: any): Observable<ApiResponse<{ user: User, token: string }>> {
-    return this.http.post<ApiResponse<{ user: User, token: string }>>(`${this.authUrl}/login`, credentials).pipe(
+    return this.http.post<ApiResponse<{ user: User, token: string }>>(`${this.authUrl}/login`, credentials, { 
+      withCredentials: true // أضيفي هذا السطر
+    }).pipe(
       tap((res) => {
         const token = (res as any).token || (res.data as any).token;
         if (token) this.setSession(token);
@@ -89,7 +93,7 @@ export class AuthService {
   }
 
   getProfile(): Observable<ApiResponse<{ user: User }>> {
-    return this.http.get<ApiResponse<{ user: User }>>(`${this.usersUrl}/me`);
+    return this.http.get<ApiResponse<{ user: User }>>(`${this.usersUrl}/me`, { withCredentials: true });
   }
 
   updateProfile(data: Partial<User>): Observable<ApiResponse<{ user: User }>> {
