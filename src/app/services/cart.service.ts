@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { CartItem, Product, ApiResponse } from '../models/interfaces';
+import { environment } from '../../environments/environment'; // تأكدي من المسار
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,9 @@ import { CartItem, Product, ApiResponse } from '../models/interfaces';
 export class CartService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private userUrl = 'http://localhost:5000/api/v1/users';
+  
+  // بنقرأ الـ Base URL من الـ environment
+  private usersUrl = `${environment.apiUrl}/users`;
 
   private cartSubject = new BehaviorSubject<CartItem[]>([]);
   cart$ = this.cartSubject.asObservable();
@@ -34,7 +37,7 @@ export class CartService {
   }
 
   private fetchUserCart() {
-    this.http.get<ApiResponse<{ user: { cart: CartItem[] } }>>(`${this.userUrl}/me`).subscribe((res) => {
+    this.http.get<ApiResponse<{ user: { cart: CartItem[] } }>>(`${this.usersUrl}/me`).subscribe((res) => {
       this.cartSubject.next(res.data.user.cart || []);
     });
   }
@@ -88,10 +91,9 @@ export class CartService {
   private updateCart(cart: CartItem[]) {
     this.cartSubject.next(cart);
     if (this.authService.isLoggedIn()) {
-      
-      this.http.patch<ApiResponse<{ cart: CartItem[] }>>(`${this.userUrl}/updateCart`, { cart }).subscribe();
+      // إرسال السلة المحدثة للسيرفر الأونلاين
+      this.http.patch<ApiResponse<{ cart: CartItem[] }>>(`${this.usersUrl}/updateCart`, { cart }).subscribe();
     } else {
-      
       localStorage.setItem('cart', JSON.stringify(cart));
     }
   }
@@ -100,7 +102,7 @@ export class CartService {
     this.cartSubject.next([]);
     localStorage.removeItem('cart');
     if (this.authService.isLoggedIn()) {
-      this.http.patch<ApiResponse<{ cart: CartItem[] }>>(`${this.userUrl}/updateCart`, { cart: [] }).subscribe();
+      this.http.patch<ApiResponse<{ cart: CartItem[] }>>(`${this.usersUrl}/updateCart`, { cart: [] }).subscribe();
     }
   }
 }

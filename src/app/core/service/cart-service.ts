@@ -1,11 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, map } from 'rxjs';
-import { AuthService } from './auth-service';
-import { CartItem } from '../models/cart.model';
-import { Product } from '../models/product.model';
-import { ApiResponse } from '../models/auth.model';
-import { environment } from '../../../environments/environment';
+import { AuthService } from '../../services/auth.service';
+import { CartItem } from '../../models/cart.model';
+import { Product } from '../../models/product.model';
+import { ApiResponse } from '../../models/auth.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class CartService {
   private cartSubject = new BehaviorSubject<CartItem[]>([]);
   cart$ = this.cartSubject.asObservable();
   cartCount$ = this.cart$.pipe(
-    map(cart => cart.reduce((total, item) => total + item.count, 0))
+    map(cart => cart.reduce((total: any, item: { count: any; }) => total + item.count, 0))
   );
 
   constructor() {

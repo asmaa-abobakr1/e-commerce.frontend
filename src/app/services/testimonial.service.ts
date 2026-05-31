@@ -2,13 +2,15 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Testimonial, ApiResponse } from '../models/interfaces';
+import { environment } from '../../environments/environment'; // تأكدي من المسار
 
 @Injectable({
   providedIn: 'root'
 })
 export class TestimonialService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5000/api/v1/testimonials';
+  // ربط الخدمة بالرابط الأونلاين من الـ environment
+  private apiUrl = `${environment.apiUrl}/testimonials`;
 
   submit(testimonial: Partial<Testimonial>): Observable<ApiResponse<{ testimonial: Testimonial }>> {
     return this.http.post<ApiResponse<{ testimonial: Testimonial }>>(this.apiUrl, testimonial);
@@ -18,7 +20,6 @@ export class TestimonialService {
     return this.http.get<ApiResponse<{ testimonials: Testimonial[] }>>(`${this.apiUrl}/approved`);
   }
 
-  
   getAll(): Observable<ApiResponse<{ testimonials: Testimonial[] }>> {
     return this.http.get<ApiResponse<{ testimonials: Testimonial[] }>>(this.apiUrl);
   }

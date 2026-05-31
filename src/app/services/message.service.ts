@@ -2,13 +2,15 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Message, ApiResponse } from '../models/interfaces';
+import { environment } from '../../environments/environment'; // تأكدي من مسار الملف
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5000/api/v1/messages';
+  // بنبني الـ URL من الـ environment
+  private apiUrl = `${environment.apiUrl}/messages`;
 
   sendMessage(messageData: Partial<Message>): Observable<ApiResponse<{ message: Message }>> {
     return this.http.post<ApiResponse<{ message: Message }>>(this.apiUrl, messageData);

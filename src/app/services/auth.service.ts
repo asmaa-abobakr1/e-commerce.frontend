@@ -4,6 +4,7 @@ import { Observable, tap, BehaviorSubject } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { User, ApiResponse, Address } from '../models/interfaces';
+import { environment } from '../../environments/environment'; // تأكدي من صحة المسار لملف الـ environment عندك
 
 interface JWTPayload {
   id: string;
@@ -18,7 +19,11 @@ interface JWTPayload {
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private apiUrl = 'http://localhost:5000/api/v1/auth';
+  
+  // بنقرأ الـ Base URL الأساسي من الـ environment الموحد أوتوماتيك
+  private baseUrl = environment.apiUrl; 
+  private authUrl = `${this.baseUrl}/auth`;
+  private usersUrl = `${this.baseUrl}/users`;
   
   private userSubject = new BehaviorSubject<User | JWTPayload | null>(null);
   user$ = this.userSubject.asObservable();
@@ -52,7 +57,7 @@ export class AuthService {
   }
 
   signup(userData: Partial<User>): Observable<ApiResponse<{ user: User, token: string }>> {
-    return this.http.post<ApiResponse<{ user: User, token: string }>>(`${this.apiUrl}/signup`, userData).pipe(
+    return this.http.post<ApiResponse<{ user: User, token: string }>>(`${this.authUrl}/signup`, userData).pipe(
       tap((res) => {
         if ('token' in res) {
            this.setSession((res as any).token);
@@ -64,7 +69,7 @@ export class AuthService {
   }
 
   login(credentials: any): Observable<ApiResponse<{ user: User, token: string }>> {
-    return this.http.post<ApiResponse<{ user: User, token: string }>>(`${this.apiUrl}/login`, credentials).pipe(
+    return this.http.post<ApiResponse<{ user: User, token: string }>>(`${this.authUrl}/login`, credentials).pipe(
       tap((res) => {
         const token = (res as any).token || (res.data as any).token;
         if (token) this.setSession(token);
@@ -84,11 +89,11 @@ export class AuthService {
   }
 
   getProfile(): Observable<ApiResponse<{ user: User }>> {
-    return this.http.get<ApiResponse<{ user: User }>>('http://localhost:5000/api/v1/users/me');
+    return this.http.get<ApiResponse<{ user: User }>>(`${this.usersUrl}/me`);
   }
 
   updateProfile(data: Partial<User>): Observable<ApiResponse<{ user: User }>> {
-    return this.http.patch<ApiResponse<{ user: User }>>('http://localhost:5000/api/v1/users/updateMe', data).pipe(
+    return this.http.patch<ApiResponse<{ user: User }>>(`${this.usersUrl}/updateMe`, data).pipe(
       tap((res) => {
         const current = this.userSubject.value;
         this.userSubject.next({ ...current, ...res.data.user } as User);
@@ -97,15 +102,15 @@ export class AuthService {
   }
 
   addAddress(address: Partial<Address>): Observable<ApiResponse<{ addresses: Address[] }>> {
-    return this.http.post<ApiResponse<{ addresses: Address[] }>>('http://localhost:5000/api/v1/users/address', address);
+    return this.http.post<ApiResponse<{ addresses: Address[] }>>(`${this.usersUrl}/address`, address);
   }
 
   deleteAddress(id: string): Observable<ApiResponse<{ addresses: Address[] }>> {
-    return this.http.delete<ApiResponse<{ addresses: Address[] }>>(`http://localhost:5000/api/v1/users/address/${id}`);
+    return this.http.delete<ApiResponse<{ addresses: Address[] }>>(`${this.usersUrl}/address/${id}`);
   }
 
   setDefaultAddress(id: string): Observable<ApiResponse<{ addresses: Address[] }>> {
-    return this.http.patch<ApiResponse<{ addresses: Address[] }>>(`http://localhost:5000/api/v1/users/address/${id}/default`, {});
+    return this.http.patch<ApiResponse<{ addresses: Address[] }>>(`${this.usersUrl}/address/${id}/default`, {});
   }
 
   isLoggedIn(): boolean {

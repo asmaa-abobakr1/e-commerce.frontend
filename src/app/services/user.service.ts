@@ -1,13 +1,15 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment'; // تأكدي من المسار
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5000/api/v1/users';
+  // ربط الخدمة بالرابط الأونلاين من الـ environment
+  private apiUrl = `${environment.apiUrl}/users`;
 
   getMe(): Observable<any> {
     return this.http.get(`${this.apiUrl}/me`);
@@ -25,7 +27,6 @@ export class UserService {
     return this.http.delete(`${this.apiUrl}/address/${id}`);
   }
 
-  
   getAllUsers(): Observable<any> {
     return this.http.get(this.apiUrl);
   }
