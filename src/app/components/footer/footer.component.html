@@ -1,0 +1,51 @@
+<footer class="bg-dark text-white pt-5 pb-4 position-relative overflow-hidden footer">
+  <div class="mesh-gradient opacity-10"></div>
+  <div class="container position-relative">
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6">
+        <h4 class="fw-bolder mb-4"><span class="text-primary">{{ (settings?.siteName || 'YOUTH').split(' ')[0] }}</span><span class="text-white">{{ (settings?.siteName || 'STORE').split(' ')[1] || '' }}</span></h4>
+        <p class="text-gray opacity-75 mb-4">{{ settings?.footerAboutText || "The ultimate destination for casual youth fashion. Stay trendy, stay vibrant with our latest collections and exclusive street style drops." }}</p>
+        <div class="d-flex gap-3">
+          <a [href]="settings?.socialLinks?.facebook || '#'" class="btn btn-outline-light rounded-circle p-2 shadow-sm" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"><i class="fab fa-facebook-f"></i></a>
+          <a [href]="settings?.socialLinks?.instagram || '#'" class="btn btn-outline-light rounded-circle p-2 shadow-sm" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"><i class="fab fa-instagram"></i></a>
+          <a [href]="settings?.socialLinks?.twitter || '#'" class="btn btn-outline-light rounded-circle p-2 shadow-sm" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-md-6">
+        <h6 class="text-uppercase fw-bold mb-4 text-primary">Quick Links</h6>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a routerLink="/new" class="text-gray text-decoration-none hover-white">New Arrivals</a></li>
+          <li class="mb-2"><a routerLink="/best" class="text-gray text-decoration-none hover-white">Best Sellers</a></li>
+          <li class="mb-2"><a routerLink="/shop" class="text-gray text-decoration-none hover-white">Collections</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-2 col-md-6">
+        <h6 class="text-uppercase fw-bold mb-4 text-primary">Support</h6>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a routerLink="/about" class="text-gray text-decoration-none hover-white">About Us</a></li>
+          <li class="mb-2"><a routerLink="/contact" class="text-gray text-decoration-none hover-white">Contact Us</a></li>
+          <li class="mb-2"><a routerLink="/terms" class="text-gray text-decoration-none hover-white">Terms</a></li>
+          <li class="mb-2"><a routerLink="/privacy" class="text-gray text-decoration-none hover-white">Privacy</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <h6 class="text-uppercase fw-bold mb-4 text-primary">Newsletter</h6>
+        <p class="text-gray small mb-4">Subscribe to get special offers and once-in-a-lifetime deals.</p>
+        <div class="input-group mb-3">
+          <input type="text" class="form-control bg-transparent border-secondary text-white rounded-start-pill px-4" placeholder="Email Address">
+          <button class="btn btn-primary rounded-end-pill px-4" type="button">Join</button>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-5 opacity-10">
+    
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+      <p class="text-gray small mb-0">© 2026 {{ settings?.siteName || 'YouthStore' }}. All rights reserved.</p>
+      
+    </div>
+  </div>
+</footer>

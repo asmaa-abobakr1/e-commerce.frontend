@@ -1,0 +1,102 @@
+.product-card {
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  will-change: transform;
+  border: 1px solid rgba(197, 168, 128, 0.15) !important;
+  background: #ffffff;
+}
+
+.modal-open {
+  overflow: hidden; /* Prevent background scroll */
+}
+
+/* Disable background product cards transitions and transforms to prevent lag/flickering when modal is open */
+.modal-open .product-card {
+  pointer-events: none !important;
+  will-change: auto !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+.hover-lift {
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.modal-open .hover-lift:hover {
+  transform: none !important;
+}
+
+.text-truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.description-truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.modal-open .product-card:hover {
+  transform: none !important;
+}
+
+.modal-open .product-card:hover .card-img-top {
+  transform: none !important;
+}
+
+.card-img-top {
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.product-card:hover .card-img-top {
+  transform: scale(1.03);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.img-grid-large {
+  height: 280px;
+  object-fit: cover;
+}
+
+.img-compact-small {
+  height: 200px;
+  object-fit: cover;
+}
+.img-grid-large {
+  height: 280px;
+  object-fit: cover;
+}
+
+.img-compact-small {
+  height: 200px;
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .img-grid-large {
+    height: 200px;
+  }
+  .img-compact-small {
+    height: 150px;
+  }
+  .product-card {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .img-grid-large {
+    height: 150px;
+  }
+  .img-compact-small {
+    height: 120px;
+  }
+}
