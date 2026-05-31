@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://e-commerce-backend-five-lilac.vercel.app/api/$1"
+      "destination": "https://e-commerce-backend-ltlk3wqv3-asmaa-abobakr1s-projects.vercel.app/api/$1"
     },
     {
       "source": "/(.*)",
