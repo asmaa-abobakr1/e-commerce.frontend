@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: '/api/v1'
+  apiUrl: 'https://e-commerce-backend-five-lilac.vercel.app/api/v1'
 };
