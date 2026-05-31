@@ -14,21 +14,9 @@
 }
 
 
-/* Remove old blur rule as we now use .blur-overlay */
-
-/* Remove rule that hides header/footer when modal is open */
-/*
-.modal-open app-header,
-.modal-open app-footer {
-  display: none;
-}
-*/
-
 body.modal-open {
-  overflow-y: scroll; /* keep scrollbar space to avoid layout shift */
+  overflow-y: scroll; 
 }
-
-/* Fluid main content - allow nested sections to stretch edge-to-edge */
 .content {
   width: 100%;
 }

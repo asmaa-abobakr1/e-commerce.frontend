@@ -2,10 +2,10 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { CartItem } from '../../models/cart.model';
-import { Product } from '../../models/product.model';
-import { ApiResponse } from '../../models/auth.model';
-import { environment } from '../../environments/environment';
+import { CartItem } from '../../core/models/cart.model';
+import { Product } from '../../core/models/product.model';
+import { ApiResponse } from '../../core/models/auth.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
