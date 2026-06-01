@@ -78,8 +78,8 @@ interface ProductForm {
     </div>
 
     <!-- Full Add/Edit Modal -->
-    <div class="modal fade show d-block" *ngIf="showForm" style="background: rgba(0,0,0,0.5)">
-       <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal fade show d-block fullscreen-modal" *ngIf="showForm" style="background: rgba(0,0,0,0.5)">
+       <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 800px; width: 100%;">
          <div class="modal-content rounded-5 border-0 p-4">
             <h4 class="fw-bold mb-4">{{editingId ? 'Edit' : 'Add'}} Product</h4>
             <div class="alert alert-danger rounded-4 small" *ngIf="formError">
@@ -146,7 +146,7 @@ interface ProductForm {
             </div>
             <div class="d-flex gap-2 mt-4">
               <button class="btn btn-primary rounded-pill px-5 py-2 fw-bold" (click)="saveProduct()">SAVE PRODUCT</button>
-              <button class="btn btn-light rounded-pill px-5 py-2" (click)="showForm = false">CANCEL</button>
+               <button class="btn btn-light rounded-pill px-5 py-2" (click)="closeForm()">CANCEL</button>
             </div>
          </div>
        </div>
@@ -154,6 +154,18 @@ interface ProductForm {
   `
 })
 export class ProductManagementComponent implements OnInit {
+  // Add CSS for fullscreen centered modal
+  static styles = [`
+    .fullscreen-modal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+      z-index: 1050;
+    }
+  `];
   private productService = inject(ProductService);
   products: Product[] = [];
   categories: Category[] = [];
@@ -203,17 +215,25 @@ export class ProductManagementComponent implements OnInit {
     this.productService.getProducts().subscribe(res => this.products = res.data.products);
   }
 
-  openForm() {
-    this.editingId = null;
-    this.selectedFile = null;
-    this.formError = '';
-    this.currentProd = {
-      title: '', price: 0, desc: '', stock: 0,
-      season: '', category: this.categories[0]?._id || '',
-      subCategory: '', gender: '', isNewArrival: false, isBestSeller: false
-    };
-    this.showForm = true;
-  }
+   openForm() {
+     this.editingId = null;
+     this.selectedFile = null;
+     this.formError = '';
+     this.currentProd = {
+       title: '', price: 0, desc: '', stock: 0,
+       season: '', category: this.categories[0]?._id || '',
+       subCategory: '', gender: '', isNewArrival: false, isBestSeller: false
+     };
+     this.showForm = true;
+     // Prevent background scrolling when modal is open
+     document.body.style.overflow = 'hidden';
+   }
+
+   closeForm() {
+     this.showForm = false;
+     // Restore scrolling
+     document.body.style.overflow = '';
+   }
 
   editProduct(prod: Product) {
     this.editingId = prod._id;
@@ -232,6 +252,7 @@ export class ProductManagementComponent implements OnInit {
       isBestSeller: prod.isBestSeller || false
     };
     this.showForm = true;
+    document.body.style.overflow = 'hidden';
   }
 
   onFileSelected(event: Event) {
@@ -296,7 +317,7 @@ export class ProductManagementComponent implements OnInit {
       this.productService.updateProduct(this.editingId, formData).subscribe({
         next: () => {
           this.load();
-          this.showForm = false;
+          this.closeForm();
         },
         error: (err) => {
           this.formError = err.error?.message || 'Failed to update product.';
@@ -306,7 +327,7 @@ export class ProductManagementComponent implements OnInit {
       this.productService.createProduct(formData).subscribe({
         next: () => {
           this.load();
-          this.showForm = false;
+          this.closeForm();
         },
         error: (err) => {
           this.formError = err.error?.message || 'Failed to create product.';
