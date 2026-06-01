@@ -12,7 +12,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 })
 export class ReportPageComponent implements OnInit {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5000/api/v1/reports/sales';
+  private apiUrl = `${window.location.origin}/api/v1/reports/sales`;
 
   startDate: string = new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0];
   endDate: string = new Date().toISOString().split('T')[0];
