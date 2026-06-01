@@ -169,7 +169,7 @@ export class ProductManagementComponent implements OnInit {
     price: 0,
     desc: '',
     stock: 0,
-    season: '',
+    season: 'Summer 2026',
     category: '',
     subCategory: '',
     gender: '',
