@@ -9,10 +9,10 @@ interface ProductForm {
   price: number;
   desc: string;
   stock: number;
-  gender: 'boys' | 'girls' | 'unisex';
   season: string;
   category: string;
   subCategory: string;
+  gender: string;
   isNewArrival: boolean;
   isBestSeller: boolean;
 }
@@ -103,16 +103,17 @@ interface ProductForm {
                 <input type="number" class="form-control rounded-pill" min="0" step="1" [(ngModel)]="currentProd.stock">
               </div>
               <div class="col-md-4">
-                <label class="small fw-bold">Gender</label>
-                <select class="form-select rounded-pill" [(ngModel)]="currentProd.gender">
-                  <option value="boys">Boys</option>
-                  <option value="girls">Girls</option>
-                  <option value="unisex">Unisex</option>
-                </select>
-              </div>
-              <div class="col-md-4">
                 <label class="small fw-bold">Season</label>
                 <input type="text" class="form-control rounded-pill" [(ngModel)]="currentProd.season" placeholder="Summer 2026">
+              </div>
+              <div class="col-md-4">
+                <label class="small fw-bold">Gender</label>
+                <select class="form-select rounded-pill" [(ngModel)]="currentProd.gender">
+                  <option value="">Select Gender</option>
+                  <option value="girls">Girls</option>
+                  <option value="boys">Boys</option>
+                  <option value="unisex">Unisex</option>
+                </select>
               </div>
               <div class="col-md-6">
                 <label class="small fw-bold">Category</label>
@@ -168,10 +169,10 @@ export class ProductManagementComponent implements OnInit {
     price: 0,
     desc: '',
     stock: 0,
-    gender: 'unisex',
     season: '',
     category: '',
     subCategory: '',
+    gender: '',
     isNewArrival: false,
     isBestSeller: false
   };
@@ -208,8 +209,8 @@ export class ProductManagementComponent implements OnInit {
     this.formError = '';
     this.currentProd = {
       title: '', price: 0, desc: '', stock: 0,
-      gender: 'unisex', season: '', category: this.categories[0]?._id || '',
-      subCategory: '', isNewArrival: false, isBestSeller: false
+      season: '', category: this.categories[0]?._id || '',
+      subCategory: '', gender: '', isNewArrival: false, isBestSeller: false
     };
     this.showForm = true;
   }
@@ -223,10 +224,10 @@ export class ProductManagementComponent implements OnInit {
       price: prod.price,
       desc: prod.desc,
       stock: prod.stock,
-      gender: prod.gender,
       season: prod.season || '',
       category: prod.category?._id || '',
       subCategory: prod.subCategory?._id || '',
+      gender: prod.gender || '',
       isNewArrival: prod.isNewArrival || false,
       isBestSeller: prod.isBestSeller || false
     };
@@ -245,6 +246,16 @@ export class ProductManagementComponent implements OnInit {
     this.currentProd.price = Number(this.currentProd.price);
     this.currentProd.stock = Number(this.currentProd.stock);
 
+    if (!this.currentProd.title || !this.currentProd.title.trim()) {
+      this.formError = 'Product title is required.';
+      return;
+    }
+
+    if (!this.currentProd.desc || !this.currentProd.desc.trim()) {
+      this.formError = 'Product description is required.';
+      return;
+    }
+
     if (!Number.isFinite(this.currentProd.price) || this.currentProd.price < 0) {
       this.formError = 'Price cannot be negative.';
       return;
@@ -255,24 +266,51 @@ export class ProductManagementComponent implements OnInit {
       return;
     }
 
+    if (!this.currentProd.category) {
+      this.formError = 'Category is required.';
+      return;
+    }
+
+    if (!this.currentProd.gender) {
+      this.formError = 'Gender is required.';
+      return;
+    }
+
+    if (!this.editingId && !this.selectedFile) {
+      this.formError = 'Product image is required for new products.';
+      return;
+    }
+
     const formData = new FormData();
     const prodObj = this.currentProd as any;
     Object.keys(prodObj).forEach(key => {
-      formData.append(key, prodObj[key].toString());
+      if (prodObj[key] !== undefined && prodObj[key] !== null) {
+        formData.append(key, prodObj[key].toString());
+      }
     });
     if (this.selectedFile) {
       formData.append('img', this.selectedFile);
     }
 
     if (this.editingId) {
-      this.productService.updateProduct(this.editingId, formData).subscribe(() => {
-        this.load();
-        this.showForm = false;
+      this.productService.updateProduct(this.editingId, formData).subscribe({
+        next: () => {
+          this.load();
+          this.showForm = false;
+        },
+        error: (err) => {
+          this.formError = err.error?.message || 'Failed to update product.';
+        }
       });
     } else {
-      this.productService.createProduct(formData).subscribe(() => {
-        this.load();
-        this.showForm = false;
+      this.productService.createProduct(formData).subscribe({
+        next: () => {
+          this.load();
+          this.showForm = false;
+        },
+        error: (err) => {
+          this.formError = err.error?.message || 'Failed to create product.';
+        }
       });
     }
   }
