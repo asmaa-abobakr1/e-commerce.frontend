@@ -78,8 +78,9 @@ interface ProductForm {
     </div>
 
     <!-- Full Add/Edit Modal -->
-    <div class="fullscreen-modal" *ngIf="showForm">
-      <div class="modal-content rounded-5 border-0 p-4" style="height:100%;">
+    <div class="modal fade show d-block" *ngIf="showForm" style="background: rgba(0,0,0,0.5)">
+       <div class="modal-dialog modal-lg modal-dialog-centered">
+         <div class="modal-content rounded-5 border-0 p-4">
             <h4 class="fw-bold mb-4">{{editingId ? 'Edit' : 'Add'}} Product</h4>
             <div class="alert alert-danger rounded-4 small" *ngIf="formError">
               {{ formError }}
@@ -145,42 +146,14 @@ interface ProductForm {
             </div>
             <div class="d-flex gap-2 mt-4">
               <button class="btn btn-primary rounded-pill px-5 py-2 fw-bold" (click)="saveProduct()">SAVE PRODUCT</button>
-               <button class="btn btn-light rounded-pill px-5 py-2" (click)="closeForm()">CANCEL</button>
+              <button class="btn btn-light rounded-pill px-5 py-2" (click)="showForm = false">CANCEL</button>
             </div>
          </div>
        </div>
-
+    </div>
   `
 })
 export class ProductManagementComponent implements OnInit {
-  static styles = [`
-    .fullscreen-modal {
-      position: fixed !important;
-      inset: 0 !important;
-      display: flex !important;
-      align-items: stretch !important;
-      justify-content: center !important;
-      z-index: 1050 !important;
-      background: rgba(0,0,0,0.5) !important;
-      padding: 0 !important;
-    }
-    .fullscreen-modal .modal-dialog {
-      width: 100vw !important;
-      max-width: none !important;
-      height: 100vh !important;
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-    .fullscreen-modal .modal-content {
-      width: 100% !important;
-      height: 100% !important;
-      max-height: 100% !important;
-      border-radius: 0 !important;
-      overflow-y: auto !important;
-      padding: 1rem !important;
-      box-sizing: border-box !important;
-    }
-  `];
   private productService = inject(ProductService);
   products: Product[] = [];
   categories: Category[] = [];
@@ -230,25 +203,17 @@ export class ProductManagementComponent implements OnInit {
     this.productService.getProducts().subscribe(res => this.products = res.data.products);
   }
 
-   openForm() {
-     this.editingId = null;
-     this.selectedFile = null;
-     this.formError = '';
-     this.currentProd = {
-       title: '', price: 0, desc: '', stock: 0,
-       season: '', category: this.categories[0]?._id || '',
-       subCategory: '', gender: '', isNewArrival: false, isBestSeller: false
-     };
-     this.showForm = true;
-     // Prevent background scrolling when modal is open
-     document.body.style.overflow = 'hidden';
-   }
-
-   closeForm() {
-     this.showForm = false;
-     // Restore scrolling
-     document.body.style.overflow = '';
-   }
+  openForm() {
+    this.editingId = null;
+    this.selectedFile = null;
+    this.formError = '';
+    this.currentProd = {
+      title: '', price: 0, desc: '', stock: 0,
+      season: 'Summer 2026', category: this.categories[0]?._id || '',
+      subCategory: '', gender: '', isNewArrival: false, isBestSeller: false
+    };
+    this.showForm = true;
+  }
 
   editProduct(prod: Product) {
     this.editingId = prod._id;
@@ -267,7 +232,6 @@ export class ProductManagementComponent implements OnInit {
       isBestSeller: prod.isBestSeller || false
     };
     this.showForm = true;
-    document.body.style.overflow = 'hidden';
   }
 
   onFileSelected(event: Event) {
@@ -332,7 +296,7 @@ export class ProductManagementComponent implements OnInit {
       this.productService.updateProduct(this.editingId, formData).subscribe({
         next: () => {
           this.load();
-          this.closeForm();
+          this.showForm = false;
         },
         error: (err) => {
           this.formError = err.error?.message || 'Failed to update product.';
@@ -342,7 +306,7 @@ export class ProductManagementComponent implements OnInit {
       this.productService.createProduct(formData).subscribe({
         next: () => {
           this.load();
-          this.closeForm();
+          this.showForm = false;
         },
         error: (err) => {
           this.formError = err.error?.message || 'Failed to create product.';
