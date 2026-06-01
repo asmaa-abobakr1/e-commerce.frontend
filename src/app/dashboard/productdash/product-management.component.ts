@@ -78,9 +78,8 @@ interface ProductForm {
     </div>
 
     <!-- Full Add/Edit Modal -->
-    <div class="modal fade show d-block fullscreen-modal" *ngIf="showForm" style="background: rgba(0,0,0,0.5)">
-       <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 800px; width: 100%;">
-         <div class="modal-content rounded-5 border-0 p-4">
+    <div class="fullscreen-modal" *ngIf="showForm">
+      <div class="modal-content rounded-5 border-0 p-4" style="height:100%;">
             <h4 class="fw-bold mb-4">{{editingId ? 'Edit' : 'Add'}} Product</h4>
             <div class="alert alert-danger rounded-4 small" *ngIf="formError">
               {{ formError }}
@@ -154,16 +153,32 @@ interface ProductForm {
   `
 })
 export class ProductManagementComponent implements OnInit {
-  // Add CSS for fullscreen centered modal
   static styles = [`
     .fullscreen-modal {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow-y: auto;
-      z-index: 1050;
+      position: fixed !important;
+      inset: 0 !important;
+      display: flex !important;
+      align-items: stretch !important;
+      justify-content: center !important;
+      z-index: 1050 !important;
+      background: rgba(0,0,0,0.5) !important;
+      padding: 0 !important;
+    }
+    .fullscreen-modal .modal-dialog {
+      width: 100vw !important;
+      max-width: none !important;
+      height: 100vh !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    .fullscreen-modal .modal-content {
+      width: 100% !important;
+      height: 100% !important;
+      max-height: 100% !important;
+      border-radius: 0 !important;
+      overflow-y: auto !important;
+      padding: 1rem !important;
+      box-sizing: border-box !important;
     }
   `];
   private productService = inject(ProductService);
