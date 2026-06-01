@@ -56,30 +56,27 @@ export class AuthService {
     });
   }
 
- signup(userData: Partial<User>): Observable<ApiResponse<{ user: User, token: string }>> {
+signup(userData: Partial<User>): Observable<ApiResponse<{ user: User, token: string }>> {
   return this.http.post<ApiResponse<{ user: User, token: string }>>(`${this.authUrl}/signup`, userData, { 
-    withCredentials: true // أضيفي هذا السطر
+    withCredentials: true 
   }).pipe(
-    tap((res) => {
-        if ('token' in res) {
-           this.setSession((res as any).token);
-        } else if (res.data && (res.data as any).token) {
-           this.setSession((res.data as any).token);
-        }
-      })
-    );
-  }
+    tap((res: any) => {
+      const token = res.token || (res.data && res.data.token);
+      if (token) this.setSession(token);
+    })
+  );
+}
 
-  login(credentials: any): Observable<ApiResponse<{ user: User, token: string }>> {
-    return this.http.post<ApiResponse<{ user: User, token: string }>>(`${this.authUrl}/login`, credentials, { 
-      withCredentials: true // أضيفي هذا السطر
-    }).pipe(
-      tap((res) => {
-        const token = (res as any).token || (res.data as any).token;
-        if (token) this.setSession(token);
-      })
-    );
-  }
+login(credentials: any): Observable<ApiResponse<{ user: User, token: string }>> {
+  return this.http.post<ApiResponse<{ user: User, token: string }>>(`${this.authUrl}/login`, credentials, { 
+    withCredentials: true 
+  }).pipe(
+    tap((res: any) => {
+      const token = res.token || (res.data && res.data.token);
+      if (token) this.setSession(token);
+    })
+  );
+}
 
   logout() {
     localStorage.removeItem('token');
