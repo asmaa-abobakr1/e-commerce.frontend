@@ -17,6 +17,7 @@
         <!-- Status badges placed below product details -->
         <div class="card-status d-flex gap-2 mt-2">
           <span *ngIf="product.isNewArrival && product.stock > 3" class="badge bg-success text-white">NEW</span>
+          <span *ngIf="product.isBestSeller && product.stock > 0" class="badge bg-warning text-dark">BEST</span>
           <span *ngIf="product.stock > 0 && product.stock <= 3" class="badge bg-danger text-white">Only {{ product.stock }} left!</span>
           <span *ngIf="product.stock === 0" class="badge bg-dark text-white">Out of Stock</span>
         </div>
@@ -60,6 +61,7 @@
         <!-- Simplified status labels below image -->
         <div class="status-labels d-flex gap-2 mt-2">
           <span *ngIf="product.isNewArrival && product.stock > 3" class="badge bg-success text-white">NEW</span>
+          <span *ngIf="product.isBestSeller && product.stock > 0" class="badge bg-warning text-dark">BEST</span>
           <span *ngIf="product.stock > 0 && product.stock <= 3" class="badge bg-danger text-white">Only {{ product.stock }} left!</span>
           <span *ngIf="product.stock === 0" class="badge bg-dark text-white">Out of Stock</span>
         </div>
