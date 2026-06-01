@@ -149,7 +149,7 @@ interface ProductForm {
             </div>
          </div>
        </div>
-    </div>
+
   `
 })
 export class ProductManagementComponent implements OnInit {
