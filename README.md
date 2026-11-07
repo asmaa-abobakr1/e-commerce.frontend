@@ -18,7 +18,7 @@ A modern and responsive E-Commerce web application built to provide users with a
 
 🛠️ Tech Stack
 
-* React.js
+* Angular
 * JavaScript / TypeScript
 * HTML5
 * CSS3
